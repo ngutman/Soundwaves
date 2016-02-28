@@ -71,7 +71,6 @@ void loop() {
 
       print_level();
       show_leds();
-
     }
   }
 }
@@ -102,9 +101,9 @@ void print_level() {
     n = outputs[i];
     if (n >= 0.01) {
       Serial.print(n);
-      Serial.print(" ");
+      Serial.print(" \t");
     } else {
-      Serial.print("  -  "); // don't print "0.00"
+      Serial.print("  -  \t"); // don't print "0.00"
     }
   }
   Serial.println();
