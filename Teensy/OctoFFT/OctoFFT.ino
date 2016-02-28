@@ -11,7 +11,7 @@
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
 
 AudioInputI2S          audioInput;         // audio shield: mic or line-in
-AudioAnalyzeFFT256    myFFT;
+AudioAnalyzeFFT1024    myFFT;
 AudioConnection patchCord1(audioInput, 0, myFFT, 0);
 AudioControlSGTL5000 audioShield;
 
@@ -48,22 +48,22 @@ void loop() {
   if (fps > 24) {
 
     if (myFFT.available()) {
-      level[0] = myFFT.read(2);
-      level[1] = myFFT.read(3);
-      level[2] = myFFT.read(4);
-      level[3] = myFFT.read(5, 6);
-      level[4] = myFFT.read(7, 8);
-      level[5] = myFFT.read(9, 10);
-      level[6] = myFFT.read(11, 14);
-      level[7] = myFFT.read(15, 19);
-      level[8] = myFFT.read(20, 25);
-      level[9] = myFFT.read(26, 32);
-      level[10] = myFFT.read(33, 41);
-      level[11] = myFFT.read(42, 52);
-      level[12] = myFFT.read(53, 65);
-      level[13] = myFFT.read(66, 82);
-      level[14] = myFFT.read(83, 103);
-      level[15] = myFFT.read(104, 127);
+      level[0] =  myFFT.read(0);
+      level[1] =  myFFT.read(1);
+      level[2] =  myFFT.read(2, 3);
+      level[3] =  myFFT.read(4, 6);
+      level[4] =  myFFT.read(7, 10);
+      level[5] =  myFFT.read(11, 15);
+      level[6] =  myFFT.read(16, 22);
+      level[7] =  myFFT.read(23, 32);
+      level[8] =  myFFT.read(33, 46);
+      level[9] =  myFFT.read(47, 66);
+      level[10] = myFFT.read(67, 93);
+      level[11] = myFFT.read(94, 131);
+      level[12] = myFFT.read(132, 184);
+      level[13] = myFFT.read(185, 257);
+      level[14] = myFFT.read(258, 359);
+      level[15] = myFFT.read(360, 511);
 
       for (i = 0; i < NUM_LEVELS; i++) {
         outputs[i] = channels[i].updateAndRead(level[i] * 255);
@@ -99,7 +99,7 @@ void print_level() {
   Serial.print("FFT: ");
   for (i = 0; i < NUM_LEVELS; i++) {
     n = outputs[i];
-    if (n >= 0.01) {
+    if (n >= 50) {
       Serial.print(n);
       Serial.print(" \t");
     } else {
