@@ -7,9 +7,12 @@
 #include <SD.h>
 #include <SerialFlash.h>
 
-#define NUM_LEDS_PER_STRIP 120
-#define NUM_LEDS 120
-#define NUM_STRIPS 1
+#define NUM_LEDS_PER_STRIP 150
+#define NUM_STRIPS 2
+#define START_LED 75
+#define SIDE_LENGTH 40
+
+
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
 
 const int myInput = AUDIO_INPUT_LINEIN;
@@ -41,7 +44,7 @@ void setup() {
   audioShield.lineInLevel(15);
 
   FastLED.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
-  FastLED.setBrightness(64);
+  FastLED.setBrightness(90);
 }
 
 float level[16];
@@ -53,6 +56,7 @@ void animate_stefan_petrick(uint8_t *bands);
 void fade_down(uint8_t value);
 void print_msgeq7_bands(uint8_t *bands);
 void simulate_msgeq7_bands(uint8_t *bands);
+void animate_strip(int strip);
 
 uint8_t bands[7];
 
@@ -91,20 +95,31 @@ void print_msgeq7_bands(uint8_t *bands) {
 }
 
 void animate_stefan_petrick(uint8_t *bands) {
-  leds[30] = CRGB(bands[6], bands[5] / 8, bands[1] / 2);
-  leds[30].fadeToBlackBy(bands[3] / 12);
-  for (int i = 60; i > 30; i--) {
-    leds[i] = leds[i - 1];
+
+  for (int strip = 0; strip < NUM_STRIPS; strip++) {
+    animate_strip(strip);
   }
-  for (int i = 0; i < 30; i++) {
-    leds[i] = leds[i + 1];
-  }
+  
   FastLED.show();
   fade_down(4);
 }
 
+void animate_strip(int strip) {
+  CRGB* current_strip = &leds[NUM_LEDS_PER_STRIP * strip];
+
+  current_strip[START_LED] = CRGB(bands[6], bands[5] / 8, bands[1] / 2);
+  current_strip[START_LED].fadeToBlackBy(bands[3] / 12);
+  for (int i = START_LED + SIDE_LENGTH; i > START_LED; i--) {
+    current_strip[i] = current_strip[i - 1];
+  }
+  
+  for (int i = START_LED - SIDE_LENGTH; i < START_LED; i++) {
+    current_strip[i] = current_strip[i + 1];
+  }
+}
+
 void fade_down(uint8_t value) {
-  for (int i = 0; i < NUM_LEDS; i++) {
+  for (int i = 0; i < NUM_LEDS_PER_STRIP * NUM_STRIPS; i++) {
     leds[i].fadeToBlackBy(value);
   }
 }
