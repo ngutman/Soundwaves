@@ -1,11 +1,11 @@
 int MEMBRANE_SIZE = 200;
-int HORNS = 20;
+int HORNS = 7;
 int LEDS = 80;
 int LED_SIZE = 5;
 int LED_SPACE = 5;
 int HORN_OPENING_ANGLE = 5;
 
-int LEDS_ARC_ANGLE = 160;
+int LEDS_ARC_ANGLE = 120;
 float HORN_ANGLE = radians(LEDS_ARC_ANGLE)/(HORNS-1);
 float HORN_START_ANGLE = (PI-radians(LEDS_ARC_ANGLE))/2;
 
