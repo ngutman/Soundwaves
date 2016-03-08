@@ -1,9 +1,13 @@
 int MEMBRANE_SIZE = 200;
-int HORNS = 7;
+int HORNS = 20;
 int LEDS = 80;
 int LED_SIZE = 5;
 int LED_SPACE = 5;
-int HORN_ANGLE = 5;
+int HORN_OPENING_ANGLE = 5;
+
+int LEDS_ARC_ANGLE = 160;
+float HORN_ANGLE = radians(LEDS_ARC_ANGLE)/(HORNS-1);
+float HORN_START_ANGLE = (PI-radians(LEDS_ARC_ANGLE))/2;
 
 int camerax;
 int cameray;
@@ -33,22 +37,24 @@ void draw() {
 }
 
 void drawRing() {
-  int hornLength = LEDS * (LED_SIZE+LED_SPACE);
-  float ringZPosition = cos(radians(HORN_ANGLE)) * hornLength;
-  float ringRadius = MEMBRANE_SIZE / 2 + sin(radians(HORN_ANGLE))*hornLength;
+  int hornLength = LEDS * (LED_SIZE+LED_SPACE) - LED_SPACE;
+  float ringZPosition = cos(radians(HORN_OPENING_ANGLE)) * hornLength;
+  float ringDiameter = MEMBRANE_SIZE + 2 * sin(radians(HORN_OPENING_ANGLE)) * hornLength;
   
   pushMatrix();
   
-  translate(0, 0, hornLength);
-  fill(255, 0, 0, 255);
-  arc(0, 0, ringRadius, ringRadius, 0, TWO_PI);
+  translate(0, 0, ringZPosition);
+  noFill();
+  stroke(255, 255, 255, 255);
+  arc(0, 0, ringDiameter, ringDiameter, -PI-PI/6, PI/6);
+  arc(0, 0, ringDiameter + 5, ringDiameter + 5, -PI-PI/6, PI/6);
   
   popMatrix();
 }
 
 void drawHorn(int horn) {
   pushMatrix();
-  float angle = -(PI/(HORNS-1)) * horn;
+  float angle = -(HORN_START_ANGLE + HORN_ANGLE * horn);
   
   float x = cos(angle) * MEMBRANE_SIZE/2;
   float y = sin(angle) * MEMBRANE_SIZE/2;
@@ -56,7 +62,7 @@ void drawHorn(int horn) {
   translate(x, y);
   
   rotate(angle);
-  rotateY(radians(-90 + HORN_ANGLE));
+  rotateY(radians(-90 + HORN_OPENING_ANGLE));
  
   for (int i=0; i < LEDS; i++) {
     drawLed(i);
