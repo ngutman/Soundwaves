@@ -1,9 +1,15 @@
 int MEMBRANE_SIZE = 200;
 int HORNS = 7;
 int LEDS = 40;
+int camerax;
+int cameray;
+int cameraz;
 
 void setup() {
   size(1000, 1000, P3D);
+  camerax = width/2;
+  cameray = height/2;
+  cameraz = 0;
 }
 
 void draw() {
@@ -51,7 +57,18 @@ void drawLed(int led) {
 }
 
 void changeCamera() {
-  camera(width/2, height/2, (height/2) / tan(PI/6), mouseX, mouseY, 0, 0, 1, 0);
+  camera(camerax, cameray, (height/2) / tan(PI/6) + cameraz, mouseX, mouseY, 0, 0, 1, 0);
+  if (keyPressed) {
+    if (key == 'w') {
+      cameraz -= 2;
+    } else if (key == 's') {
+      cameraz += 2;
+    } else if (key == 'd') {
+      camerax += 2;      
+    } else if (key == 'a') {
+      camerax -= 2;
+    }
+  }
 }
 
 void drawMembrane() {
