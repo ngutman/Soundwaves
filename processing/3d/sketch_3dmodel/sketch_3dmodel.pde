@@ -46,8 +46,9 @@ void drawRing() {
   translate(0, 0, ringZPosition);
   noFill();
   stroke(255, 255, 255, 255);
+  strokeWeight(10);
   arc(0, 0, ringDiameter, ringDiameter, -PI-PI/6, PI/6);
-  arc(0, 0, ringDiameter + 5, ringDiameter + 5, -PI-PI/6, PI/6);
+  strokeWeight(1);
   
   popMatrix();
 }
@@ -84,7 +85,7 @@ void drawLed(int led) {
 }
 
 void changeCamera() {
-  camera(camerax, cameray, (height/2) / tan(PI/6) + cameraz, mouseX, mouseY, 0, 0, 1, 0);
+  camera(camerax, cameray, (height/2) / tan(PI/8) + cameraz, mouseX, mouseY, 0, 0, 1, 0);
   if (keyPressed) {
     if (key == 'w') {
       cameraz -= 2;
