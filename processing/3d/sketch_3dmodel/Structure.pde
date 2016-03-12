@@ -20,18 +20,19 @@ float HORN_ANGLE = radians(LEDS_ARC_ANGLE)/(HORNS-1);
 float HORN_START_ANGLE = (PI-radians(LEDS_ARC_ANGLE))/2;
 
 class Structure {
+  color[][] leds;
+  
   void drawStructure() {
     translate(width/2, height/2);
     
-    
     stroke(255, 0, 0, 255);
-    line(0, 0, 0, 300, 0, 0);
+    line(0, 0, 0, 100, 0, 0);
     
     stroke(0, 255, 0, 255);
-    line(0, 0, 0, 0, 300, 0);
+    line(0, 0, 0, 0, 100, 0);
     
     stroke(0, 0, 255, 255);
-    line(0, 0, 0, 0, 0, 300);
+    line(0, 0, 0, 0, 0, 100);
   
     drawMembrane();
     
@@ -85,18 +86,18 @@ class Structure {
     rotateY(radians(-90 + HORN_OPENING_ANGLE));
    
     for (int i=0; i < LEDS; i++) {
-      drawLed(i);
+      drawLed(i, horn);
     }
     
     popMatrix();
   }
   
-  void drawLed(int led) {
+  void drawLed(int led, int horn) {
     pushMatrix();
     
     translate(led * (LED_SIZE+LED_SPACE), 0, 0);
     
-    fill(255, 0, 0, 255);
+    fill(leds[horn][led]);
     noStroke();
     rect(0, 0, LED_SIZE, LED_SIZE);
     
@@ -108,5 +109,9 @@ class Structure {
     stroke(255);
     
     arc(0, 0, MEMBRANE_DIAMETER, MEMBRANE_DIAMETER, START_ANGLE_OF_MEMBRANE, END_ANGLE_OF_MEMBRANE);
+  }
+  
+  void updateLeds(color[][] leds) {
+    this.leds = leds;
   }
 }
