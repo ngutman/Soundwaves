@@ -1,15 +1,19 @@
-int camerax;
-int cameray;
-int cameraz;
+float camerax;
+float cameray;
+float cameraz;
 
 Structure structure = new Structure();
+TeensyFFT teensyFFT = new TeensyFFT();
+
 color[][] leds;
 
 void setup() {
-  size(1000, 1000, P3D);
-  camerax = width/2;
-  cameray = height/2;
-  cameraz = 0;
+  size(1200, 800, P3D);
+  camerax = 1288;
+  cameray = 400;
+  cameraz = 903;
+  
+  teensyFFT.setup(this);
   
   leds = new color[HORNS][];
   
@@ -22,11 +26,11 @@ int startMillis = 0;
 int frames = 0;
 
 void draw() {
+  
   background(0);
   
   calculateLeds();
-  
-  structure.updateLeds(leds);
+ 
   structure.drawStructure();
   
   changeCamera();
@@ -40,15 +44,16 @@ void draw() {
 }
 
 void calculateLeds() {
+  teensyFFT.update();
+  structure.updateLeds(leds);
+  
   for (int i = 0; i < HORNS; i++) {
-    for (int j = 0; j < LEDS; j++) {
-      leds[i][j] = color(random(255), random(255), random(255));  
-    }
+    leds[i] = teensyFFT.getStrip(i);
   }
 }
 
 void changeCamera() {
-  camera(camerax, cameray, (height/2) / tan(PI/8) + cameraz, mouseX, mouseY, 0, 0, 1, 0);
+  camera(camerax, cameray, cameraz, mouseX, mouseY, 0, 0, 1, 0);
   if (keyPressed) {
     if (key == 'w') {
       cameraz -= 4;
