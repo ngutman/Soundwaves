@@ -19,11 +19,17 @@ class TeensyFFT {
   
   color[][] octaveLeds = new color[5][];
   
+  color[][] pixelLeds = new color[8][];
+  
   void setup(PApplet app) {
     initPort(app);
     
     for (int i = 0; i < 5; i++) {
       octaveLeds[i] = new color[LEDS];
+    }
+    
+    for (int i = 0; i < 8; i++) {
+      pixelLeds[i] = new color[LEDS];
     }
   }
   
@@ -44,22 +50,52 @@ class TeensyFFT {
   }
   
   void animate() {
+    drawBeam();
+    /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
     }
+    */
   }
   
-  void drawOctave(int octaveIndex) {
-    
+  int beamMillis = millis();
+  void drawBeam() {
+    int beamSpeed = 500;
+    int timePassed = millis() - beamMillis;
+    int beamPosition = LEDS * (timePassed % beamSpeed) / beamSpeed;
+    for (int i = 0; i < pixelLeds.length; i++) {
+      color[] strip = pixelLeds[i];
+      for (int j = 0; j < strip.length; j++) {
+        if (j > beamPosition) {
+          strip[j] = color(265, 174, 0);
+          continue;
+        }
+        int tailLength = 40;
+        int distance = min(beamPosition - j, tailLength);
+        int brightness = 255 * (tailLength - distance) / tailLength;
+        strip[j] = color(265, 174, brightness);
+      }
+    }
+  }
+  
+  void drawOctave(int octaveIndex) {    
     color[] leds = octaveLeds[octaveIndex];
     int startBin = octaveCbin[octaveIndex];
     int numBins = octaveCbin[octaveIndex+1] - startBin;
+    
+    if (octaveIndex > 0) {
+      for (int i = 0; i < leds.length; i++) {
+        leds[i] = color(0, 0, 0);
+      }
+      return;
+    }
     
     if (startBin + numBins > freqValues.length) {
       numBins = freqValues.length - startBin;
     }
     
     float[] relevantFreqs = subset(freqValues, startBin, numBins);
+    //println(join(nf(relevantFreqs), " "));
     float maxFreq = max(relevantFreqs);
     float strength = maxFreq * (1 + octaveIndex/2);  //boost higher octaves
 
@@ -123,7 +159,11 @@ class TeensyFFT {
   }
   
   color[] getStrip(int strip) {
+    return pixelLeds[strip];
+    
+    /*
     return octaveLeds[strip % 5];
+    */
   }
   
   int indexOf(float[] ar, float val) {
