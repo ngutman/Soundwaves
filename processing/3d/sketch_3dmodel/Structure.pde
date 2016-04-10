@@ -10,9 +10,9 @@ int HORNS = 8;
 int DISTANCE_BETWEEN_MEMRANE_AND_RING = 700;
 float HORN_OPENING_ANGLE = 13.2;
 
-int HORN_LENGTH = 725;
-int LED_SIZE = 3;
-int LED_SPACE = 0;
+int HORN_LENGTH = 700;
+int LED_SIZE = 2;
+int LED_SPACE = 1;
 int LEDS = HORN_LENGTH / (LED_SIZE + LED_SPACE);
 
 int LEDS_ARC_ANGLE = 126;
@@ -22,7 +22,8 @@ float HORN_START_ANGLE = (PI-radians(LEDS_ARC_ANGLE))/2;
 class Structure {
   color[][] leds;
   
-  void drawStructure() {
+  void drawStructure(color[][] leds) {
+    this.leds = leds;
     translate(width/2, height/2);
     
     stroke(255, 0, 0, 255);
@@ -111,7 +112,4 @@ class Structure {
     arc(0, 0, MEMBRANE_DIAMETER, MEMBRANE_DIAMETER, START_ANGLE_OF_MEMBRANE, END_ANGLE_OF_MEMBRANE);
   }
   
-  void updateLeds(color[][] leds) {
-    this.leds = leds;
-  }
 }

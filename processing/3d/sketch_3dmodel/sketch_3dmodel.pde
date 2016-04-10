@@ -20,6 +20,7 @@ void setup() {
   for (int i = 0; i < HORNS; i++) {
     leds[i] = new color[LEDS]; 
   }
+  println("num leds", LEDS);
 }
 
 int startMillis = 0;
@@ -38,7 +39,7 @@ void draw() {
   frames++;
   if (millis() > startMillis + 1000) {
     startMillis = millis();
-    println("FPS: ", frames);
+    //println("FPS: ", frames);
     frames = 0;
   }
 }
