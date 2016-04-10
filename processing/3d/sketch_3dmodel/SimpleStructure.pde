@@ -13,7 +13,8 @@ class SimpleStructure {
       int ledSize = 6;
       int ledHSpacing = 0;
       int ledVSpacing = 10;
-      rect(i * (ledSize + ledHSpacing), stripNum * (ledSize + ledVSpacing), ledSize, ledSize);
+      int topMargin = 15;
+      rect(i * (ledSize + ledHSpacing), topMargin + stripNum * (ledSize + ledVSpacing), ledSize, ledSize);
     }
   }
   
