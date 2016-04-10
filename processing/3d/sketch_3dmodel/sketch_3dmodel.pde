@@ -32,7 +32,7 @@ void draw() {
   
   calculateLeds();
  
-  structure.drawStructure();
+  structure.drawStructure(leds);
   
   changeCamera();
   
@@ -46,7 +46,6 @@ void draw() {
 
 void calculateLeds() {
   teensyFFT.update();
-  structure.updateLeds(leds);
   
   for (int i = 0; i < HORNS; i++) {
     leds[i] = teensyFFT.getStrip(i);
