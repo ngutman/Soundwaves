@@ -1,6 +1,7 @@
 
 class BeamAnimation {
   int beamMillis = millis();
+  int tailLength = 40;
   void drawBeam(color[][] pixelLeds) {
     cleanLeds(pixelLeds);
     
@@ -13,13 +14,14 @@ class BeamAnimation {
   }
   
   int getBeamPosition(int timePassed, int beamSpeed) {
-    return LEDS * (timePassed % beamSpeed) / beamSpeed;
+    int position = LEDS * (timePassed % beamSpeed) / beamSpeed;
+    position += tailLength; //continue the tail even after the beam is off screen
+    return position;
   }
   
   void drawBeamAtPosition(int beamPosition, color[][] pixelLeds) {
     for (int i = 0; i < pixelLeds.length; i++) {
       color[] strip = pixelLeds[i];
-      int tailLength = 40;
       for (int j = 0; j < strip.length; j++) {
         if (j > beamPosition || beamPosition > j + tailLength) {
           continue;
