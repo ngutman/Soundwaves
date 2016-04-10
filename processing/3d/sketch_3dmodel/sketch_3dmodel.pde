@@ -4,15 +4,24 @@ float cameraz;
 
 Structure structure = new Structure();
 TeensyFFT teensyFFT = new TeensyFFT();
+SimpleStructure simple = new SimpleStructure();
 
 color[][] leds;
 
+boolean USE_3D = false;
+
+void settings() {
+  if (USE_3D) {
+    size(1200, 800, P3D);
+    camerax = 1288;
+    cameray = 400;
+    cameraz = 903;
+  } else {
+    size(1300, 800, P2D);
+  }
+}
+
 void setup() {
-  size(1200, 800, P3D);
-  camerax = 1288;
-  cameray = 400;
-  cameraz = 903;
-  
   teensyFFT.setup(this);
   
   leds = new color[HORNS][];
@@ -32,9 +41,12 @@ void draw() {
   
   calculateLeds();
  
-  structure.drawStructure(leds);
-  
-  changeCamera();
+  if (USE_3D) {
+    structure.drawStructure(leds);
+    changeCamera();
+  } else {
+    simple.drawStructure(leds);
+  }
   
   frames++;
   if (millis() > startMillis + 1000) {
