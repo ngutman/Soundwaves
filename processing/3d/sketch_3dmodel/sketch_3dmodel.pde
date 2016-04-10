@@ -17,7 +17,7 @@ void settings() {
     cameray = 400;
     cameraz = 903;
   } else {
-    size(1300, 800, P2D);
+    size(1400, 800, P2D);
   }
 }
 
@@ -46,6 +46,7 @@ void draw() {
     changeCamera();
   } else {
     simple.drawStructure(leds);
+    simple.drawBars(teensyFFT.getFreqValues());
   }
   
   frames++;

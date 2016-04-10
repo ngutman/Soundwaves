@@ -105,6 +105,9 @@ class TeensyFFT {
     }
   }
 
+  float[] getFreqValues() {
+    return freqValues;
+  }
   
   void initPort(PApplet app) {
     String matchingPortPrefix = "/dev/cu.usbmodem";
