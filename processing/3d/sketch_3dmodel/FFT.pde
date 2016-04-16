@@ -43,11 +43,38 @@ class TeensyFFT {
       }
       readFreqs();
       adjustHumanEar(freqValues);
+      rollingScaleToMax(freqValues);
+      exaggerate(freqValues);
       createBands();
       animate();
     }
     
     colorMode(RGB);
+  }
+  
+  float avgPeak = 0.0;
+  float falloff = 0.98;
+  void rollingScaleToMax(float[] freqValues) {
+    float peak = max(freqValues);
+    if (peak > avgPeak) {
+      avgPeak = peak;
+    } else {
+      avgPeak *= falloff;
+      avgPeak += peak * (1 - falloff);
+    }
+    if (avgPeak == 0) {
+      return;
+    } else {
+      for (int i = 0; i < freqValues.length; i++) {
+        freqValues[i] /= avgPeak;
+      }
+    }
+  }
+  
+  void exaggerate(float[] freqValues) {
+    for (int i = 0; i < freqValues.length; i++) {
+      freqValues[i] = pow(freqValues[i], 2);
+    }
   }
   
   HumanAdjuster humanAdjuster = new HumanAdjuster();
