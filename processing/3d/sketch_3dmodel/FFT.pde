@@ -42,6 +42,7 @@ class TeensyFFT {
         continue;
       }
       readFreqs();
+      adjustHumanEar(freqValues);
       createBands();
       animate();
     }
@@ -49,13 +50,24 @@ class TeensyFFT {
     colorMode(RGB);
   }
   
+  HumanAdjuster humanAdjuster = new HumanAdjuster();
+  void adjustHumanEar(float[] freqValues) {
+    humanAdjuster.adjust(freqValues);
+  }
+  
   void animate() {
-    drawBeam();
+    //drawBeam();
+    drawAudio1();
     /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
     }
     */
+  }
+  
+  Audio1 audio1 = new Audio1();
+  void drawAudio1() {
+    audio1.draw(pixelLeds, freqValues);
   }
   
   BeamAnimation beamAnimation = new BeamAnimation();
