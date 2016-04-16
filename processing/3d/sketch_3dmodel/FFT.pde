@@ -121,7 +121,7 @@ class TeensyFFT {
       return;
     }
     
-    for (int i = 1; i < freqValues.length; i++) {
+    for (int i = 0; i < freqValues.length; i++) {
      freqValues[i] = float(values[i]); 
     }
   }
