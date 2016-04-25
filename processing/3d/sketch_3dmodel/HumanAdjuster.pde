@@ -13,7 +13,7 @@ class HumanAdjuster {
       float multiplier = getHumanMultiplier(freq);
       humanMultipliers[i] = multiplier;
     }
-    printArray(humanMultipliers);
+    //printArray(humanMultipliers);
   }
   
   void adjust(float[] freqValues) {
