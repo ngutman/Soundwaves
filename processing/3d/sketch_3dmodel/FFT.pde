@@ -1,10 +1,11 @@
 import processing.serial.*;
 
 class TeensyFFT {
+  static final int NUM_FREQS = 140;
   Serial myPort;
   String myString;
   float bands[] = new float[7];
-  float[] freqValues = new float[60];
+  float[] freqValues = new float[NUM_FREQS];
   int[] octaveC = {65, 130, 260, 520, 1040, 2080};
   int[] octaveCbin = {1, 3, 6, 12, 24, 48};
   int hueOffset = 0;
@@ -45,11 +46,22 @@ class TeensyFFT {
       adjustHumanEar(freqValues);
       rollingScaleToMax(freqValues);
       exaggerate(freqValues);
+      rollingSmooth(freqValues);
       createBands();
       animate();
     }
     
     colorMode(RGB);
+  }
+  
+  float[] smoothFreqValues = new float[NUM_FREQS];
+  float smoothFactor = 0.6;
+  void rollingSmooth(float[] freqValues) {
+    for (int i = 0; i < freqValues.length; i++) {
+      float value = smoothFreqValues[i] * smoothFactor + freqValues[i] * (1 - smoothFactor);
+      smoothFreqValues[i] = value;
+      freqValues[i] = value;
+    }
   }
   
   float avgPeak = 0.0;
@@ -73,7 +85,7 @@ class TeensyFFT {
   
   void exaggerate(float[] freqValues) {
     for (int i = 0; i < freqValues.length; i++) {
-      freqValues[i] = pow(freqValues[i], 2);
+      freqValues[i] = pow(freqValues[i], 1.5);
     }
   }
   

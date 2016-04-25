@@ -54,7 +54,7 @@ void loop() {
     // each time new FFT data is available
     // print it all to the Arduino Serial Monitor
 //    Serial.print(timeMillis);
-    for (i=0; i<60; i++) {
+    for (i=0; i<140; i++) {
       n = myFFT.read(i);
       Serial.print(n);
       Serial.print(" ");

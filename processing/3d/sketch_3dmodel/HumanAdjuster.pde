@@ -2,13 +2,12 @@
 class HumanAdjuster {
   
   int[] humanFreqs = {0, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 15000, 20000};
-  int[] humanCorrection = {-4, -3, -2, 0, 2, 0, 2, 4, -4, 0, -4};
+  int[] humanCorrection = {-4, -4, -3, 0, 2, 0, 2, 4, -4, 0, -4};
   
-  int NUMBER_OF_BINS = 60;
-  float[] humanMultipliers = new float[60];
+  float[] humanMultipliers = new float[TeensyFFT.NUM_FREQS];
   
   HumanAdjuster() {
-    for (int i = 0; i < NUMBER_OF_BINS; i++) {
+    for (int i = 0; i < TeensyFFT.NUM_FREQS; i++) {
       int freq = (int) (i*43.066);
       float multiplier = getHumanMultiplier(freq);
       humanMultipliers[i] = multiplier;

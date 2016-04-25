@@ -47,6 +47,7 @@ void draw() {
   } else {
     simple.drawStructure(leds);
     simple.drawBars(teensyFFT.getFreqValues());
+    simple.drawAverages(teensyFFT.getFreqValues());
   }
   
   frames++;
