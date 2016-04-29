@@ -46,7 +46,7 @@ void draw() {
     changeCamera();
   } else {
     simple.drawStructure(leds);
-    simple.drawBars(teensyFFT.getFreqValues());
+    simple.drawBars(teensyFFT.getFreqValues(), teensyFFT.origFreqs);
     simple.drawAverages(teensyFFT.averages, teensyFFT.deltas);
     simple.drawBands(teensyFFT.bands);
   }

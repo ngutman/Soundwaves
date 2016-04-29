@@ -36,6 +36,8 @@ class TeensyFFT {
   float[] averages = new float[TeensyFFT.NUM_FREQS];
   float[] deltas = new float[TeensyFFT.NUM_FREQS];
   
+  float[] origFreqs = new float[TeensyFFT.NUM_FREQS];
+  
   void update() {
     colorMode(HSB, 360, 255, 255);
     
@@ -45,6 +47,7 @@ class TeensyFFT {
         continue;
       }
       readFreqs();
+      saveOrigFreqs();
       rollingSmooth(freqValues, 0.8);
       adjustHumanEar(freqValues);
       
@@ -60,7 +63,13 @@ class TeensyFFT {
     colorMode(RGB);
   }
   
-  float averageFactor = 0.9;
+  void saveOrigFreqs() {
+    for (int i=0; i<freqValues.length; i++) {
+      origFreqs[i] = freqValues[i];
+    }
+  }
+  
+  float averageFactor = 0.99;
   void calcDeltasAndAverages(float[] freqValues, float deltaFactor) {
     for (int i = 0; i < freqValues.length; i++) {
       averages[i] = averages[i] * averageFactor + freqValues[i] * (1 - averageFactor);
@@ -87,7 +96,7 @@ class TeensyFFT {
   }
   
   float avgPeak = 0.0;
-  float falloff = 0.999;
+  float falloff = 0.995;
   void rollingScaleToMax(float[] freqValues) {
     float peak = max(freqValues);
     if (peak > avgPeak) {
@@ -192,7 +201,7 @@ class TeensyFFT {
     bands[2] = processBand(subset(f, 7, 12));
     bands[3] = processBand(subset(f, 20, 14));
     bands[4] = processBand(subset(f, 35, 24));
-    bands[5] = processBand(subset(f, 60, 60));
+    bands[5] = processBand(subset(f, 60, 80));
   }
   
   float processBand(float[] ar) {

@@ -22,12 +22,13 @@ class SimpleStructure {
   float barWidth = 50;
   int barMargin = 1;
   
-  void drawBars(float[] freqValues) {
-    drawBarsInternal(freqValues, 255, 0);
+  void drawBars(float[] freqValues, float[] origFreqs) {
+    drawBarsInternal(freqValues, 255, 150);
+    drawBarsInternal(origFreqs, 255, 0);
   }
   
   void drawBands(float[] bands) {
-    drawBarsInternal(bands, 255, 150);
+    drawBarsInternal(bands, 255, 300);
   }
   
   void drawBarsInternal(float[] freqValues, int fillColor, int barStartY) {
