@@ -21,37 +21,36 @@ class SimpleStructure {
   int initialOffset = 10;
   float barWidth = 50;
   int barMargin = 1;
-  int barStartY = 0;
   
   void drawBars(float[] freqValues) {
-    fill(255);
-    //drawBarsInternal(freqValues);
+    drawBarsInternal(freqValues, 255, 0);
   }
-  void drawBarsInternal(float[] freqValues) {
+  
+  void drawBands(float[] bands) {
+    drawBarsInternal(bands, 255, 150);
+  }
+  
+  void drawBarsInternal(float[] freqValues, int fillColor, int barStartY) {
     float lastX = initialOffset;
     float lastWidth = 0;
+    int maxHeight = 100;
     for (int i = 0; i < freqValues.length; i++) {
-      float barHeight = (int((height - barStartY*2) * freqValues[i]))*0.5;
-      float adjustedWidth = barWidth * (1/pow((i+1),0.5)); 
-      rect(lastX + lastWidth + barMargin, height - barStartY - barHeight, adjustedWidth, height - barStartY);
+      float barHeight = maxHeight * freqValues[i];
+      float adjustedWidth = barWidth * (1/pow((i+1),0.5));
+      fill(fillColor);
+      float barYStart = height - barStartY - barHeight;
+      rect(lastX + lastWidth + barMargin, barYStart, adjustedWidth, barHeight);
       lastX = lastX + lastWidth + barMargin;
       lastWidth = adjustedWidth;
+      fill(200);
+      //text(freqValues[i], lastX, 250);
     }
     
   }
   
-  float[] averages = new float[TeensyFFT.NUM_FREQS];
-  float[] deltas = new float[TeensyFFT.NUM_FREQS];
-  float averageFactor = 0.99;
-  void drawAverages(float[] freqValues) {
-    for (int i = 0; i < freqValues.length; i++) {
-      averages[i] = averages[i] * averageFactor + freqValues[i] * (1 - averageFactor);
-      deltas[i] = max(freqValues[i] - averages[i], 0);
-    }
-    
-    fill(150);
-    //drawBarsInternal(averages);
-    drawBarsInternal(deltas);
+  void drawAverages(float[] averages, float[] deltas) {
+    //drawBarsInternal(averages, 150, 0);
+    //drawBarsInternal(deltas, 150, 0);
   }
   
   

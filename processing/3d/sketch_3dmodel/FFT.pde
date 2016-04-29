@@ -4,7 +4,6 @@ class TeensyFFT {
   static final int NUM_FREQS = 140;
   Serial myPort;
   String myString;
-  float bands[] = new float[7];
   float[] freqValues = new float[NUM_FREQS];
   int[] octaveC = {65, 130, 260, 520, 1040, 2080};
   int[] octaveCbin = {1, 3, 6, 12, 24, 48};
@@ -34,6 +33,9 @@ class TeensyFFT {
     }
   }
   
+  float[] averages = new float[TeensyFFT.NUM_FREQS];
+  float[] deltas = new float[TeensyFFT.NUM_FREQS];
+  
   void update() {
     colorMode(HSB, 360, 255, 255);
     
@@ -43,20 +45,31 @@ class TeensyFFT {
         continue;
       }
       readFreqs();
+      rollingSmooth(freqValues, 0.8);
       adjustHumanEar(freqValues);
+      
       rollingScaleToMax(freqValues);
-      exaggerate(freqValues);
-      rollingSmooth(freqValues);
-      createBands();
+      exaggerate(freqValues, 2);
+      //normalizeSum(freqValues);
+      calcDeltasAndAverages(freqValues, 0.8);
+      exaggerate(deltas, 1);
+      createBands(deltas);
       animate();
     }
     
     colorMode(RGB);
   }
   
+  float averageFactor = 0.9;
+  void calcDeltasAndAverages(float[] freqValues, float deltaFactor) {
+    for (int i = 0; i < freqValues.length; i++) {
+      averages[i] = averages[i] * averageFactor + freqValues[i] * (1 - averageFactor);
+      deltas[i] = max(freqValues[i] - averages[i]*deltaFactor, 0);
+    }
+  }
+  
   float[] smoothFreqValues = new float[NUM_FREQS];
-  float smoothFactor = 0.6;
-  void rollingSmooth(float[] freqValues) {
+  void rollingSmooth(float[] freqValues, float smoothFactor) {
     for (int i = 0; i < freqValues.length; i++) {
       float value = smoothFreqValues[i] * smoothFactor + freqValues[i] * (1 - smoothFactor);
       smoothFreqValues[i] = value;
@@ -64,8 +77,17 @@ class TeensyFFT {
     }
   }
   
+  void normalizeSum(float[] freqValues) {
+    float sum = U.sum(freqValues);
+    if (sum == 0) return;
+    
+    for (int i = 0; i < freqValues.length; i++) {
+      freqValues[i] = (freqValues[i]/sum) * 8;
+    }
+  }
+  
   float avgPeak = 0.0;
-  float falloff = 0.98;
+  float falloff = 0.999;
   void rollingScaleToMax(float[] freqValues) {
     float peak = max(freqValues);
     if (peak > avgPeak) {
@@ -83,9 +105,9 @@ class TeensyFFT {
     }
   }
   
-  void exaggerate(float[] freqValues) {
+  void exaggerate(float[] freqValues, float power) {
     for (int i = 0; i < freqValues.length; i++) {
-      freqValues[i] = pow(freqValues[i], 1.5);
+      freqValues[i] = pow(freqValues[i], power);
     }
   }
   
@@ -96,7 +118,8 @@ class TeensyFFT {
   
   void animate() {
     //drawBeam();
-    drawAudio1();
+    //drawAudio1();
+    drawAudio2();
     /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
@@ -107,6 +130,11 @@ class TeensyFFT {
   Audio1 audio1 = new Audio1();
   void drawAudio1() {
     audio1.draw(pixelLeds, freqValues);
+  }
+  
+  Audio2 audio2 = new Audio2();
+  void drawAudio2() {
+   audio2.draw(pixelLeds, freqValues, deltas, averages, bands);
   }
   
   BeamAnimation beamAnimation = new BeamAnimation();
@@ -157,13 +185,26 @@ class TeensyFFT {
     }
   }
   
-  void createBands() {
-    float[] f = freqValues;
-    bands[0] = max(subset(f, 0, 2));
-    bands[1] = max(subset(f, 2, 4));
-    bands[2] = max(subset(f, 7, 12));
-    bands[3] = max(subset(f, 20, 14));
-    bands[4] = max(subset(f, 35, 24));
+  float bands[] = new float[6];
+  void createBands(float[] f) {
+    bands[0] = processBand(subset(f, 0, 2));
+    bands[1] = processBand(subset(f, 2, 4));
+    bands[2] = processBand(subset(f, 7, 12));
+    bands[3] = processBand(subset(f, 20, 14));
+    bands[4] = processBand(subset(f, 35, 24));
+    bands[5] = processBand(subset(f, 60, 60));
+  }
+  
+  float processBand(float[] ar) {
+    return max(ar);
+  }
+  
+  float sineSum(float[] ar) {
+    float s = 0;
+    for (int i = 0; i < ar.length; i++) {
+      s += ar[i] * sin(PI*(i+1)/ar.length);
+    }
+    return s;
   }
   
   void readFreqs() {

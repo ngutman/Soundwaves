@@ -47,13 +47,14 @@ void draw() {
   } else {
     simple.drawStructure(leds);
     simple.drawBars(teensyFFT.getFreqValues());
-    simple.drawAverages(teensyFFT.getFreqValues());
+    simple.drawAverages(teensyFFT.averages, teensyFFT.deltas);
+    simple.drawBands(teensyFFT.bands);
   }
   
   frames++;
   if (millis() > startMillis + 1000) {
     startMillis = millis();
-    //println("FPS: ", frames);
+    println("FPS: ", frames);
     frames = 0;
   }
 }

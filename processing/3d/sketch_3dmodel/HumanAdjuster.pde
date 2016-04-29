@@ -1,8 +1,8 @@
 
 class HumanAdjuster {
   
-  int[] humanFreqs = {0, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 15000, 20000};
-  int[] humanCorrection = {-4, -4, -3, 0, 2, 0, 2, 4, -4, 0, -4};
+  int[] humanFreqs =      {0,  50, 100, 200, 500, 1000, 2000, 5000, 10000, 15000, 20000};
+  int[] humanCorrection = {-4, -4,  -4,   -2,   2,    2,    2,    4,    -4,     0,    -4};
   
   float[] humanMultipliers = new float[TeensyFFT.NUM_FREQS];
   
