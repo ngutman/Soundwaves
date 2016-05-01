@@ -5,10 +5,10 @@ class Audio2 {
   int x = 0;
   float lastBass = 0;
   void draw(color[][] pixelLeds, float[] freqValues, float[] deltas, float[] averages, float[] bands) {
-    float bass = bands[0];
+    //float bass = bands[0];
     //color color1 = color(0, 150, 255*bass*2);
     //pixelLeds[0][0] = color1;
-    pixelLeds[0][0] =color(30, 150, 255*(bands[1]+bands[0]));
+    pixelLeds[0][0] = color((0*bands[0] + 50*bands[1])/(bands[0]+bands[1]), 150, 255*(bands[1]+bands[0]));
     pixelLeds[1][0] = color(180, 150, 255*bands[2]*2);
     pixelLeds[2][0] = color(240, 150, 255*bands[3]*2);
     pixelLeds[3][0] = color(300, 150, 255*(bands[4]+bands[5]));

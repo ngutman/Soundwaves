@@ -198,8 +198,8 @@ class TeensyFFT {
   void createBands(float[] f) {
     bands[0] = processBand(subset(f, 0, 2));
     bands[1] = processBand(subset(f, 2, 4));
-    bands[2] = processBand(subset(f, 7, 12));
-    bands[3] = processBand(subset(f, 20, 14));
+    bands[2] = processBand(subset(f, 7, 9));
+    bands[3] = processBand(subset(f, 17, 17));
     bands[4] = processBand(subset(f, 35, 24));
     bands[5] = processBand(subset(f, 60, 80));
   }
