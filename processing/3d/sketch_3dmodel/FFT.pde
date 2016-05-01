@@ -69,7 +69,7 @@ class TeensyFFT {
     }
   }
   
-  float averageFactor = 0.99;
+  float averageFactor = 0.9;
   void calcDeltasAndAverages(float[] freqValues, float deltaFactor) {
     for (int i = 0; i < freqValues.length; i++) {
       averages[i] = averages[i] * averageFactor + freqValues[i] * (1 - averageFactor);
@@ -96,7 +96,7 @@ class TeensyFFT {
   }
   
   float avgPeak = 0.0;
-  float falloff = 0.995;
+  float falloff = 0.9;
   void rollingScaleToMax(float[] freqValues) {
     float peak = max(freqValues);
     if (peak > avgPeak) {
