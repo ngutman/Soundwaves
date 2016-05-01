@@ -48,7 +48,7 @@ class TeensyFFT {
       }
       readFreqs();
       saveOrigFreqs();
-      rollingSmooth(freqValues, 0.8);
+      //rollingSmooth(freqValues, 0.8);
       adjustHumanEar(freqValues);
       
       rollingScaleToMax(freqValues);
