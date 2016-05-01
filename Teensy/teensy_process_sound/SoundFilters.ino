@@ -7,6 +7,7 @@ void soundFiltersSetup() {
 
 void processSound(float soundArray[]) {
   rollingSmooth(soundArray, 0.8);
+  adjustHumanEar(soundArray);
 }
 
 
@@ -15,6 +16,15 @@ void rollingSmooth(float soundArray[], float smoothFactor) {
   for (int i = 0; i < NUM_BINS; i++) {
     soundArray[i] = smoothFreqValues[i] * smoothFactor + soundArray[i] * antiSmooth;
     smoothFreqValues[i] = soundArray[i];
+  }
+}
+
+// GENERATED FROM human_adjuster.py
+float HUMAN_MULTIPLIERS[140] = { 0.40, 0.40, 0.40, 0.45, 0.55, 0.66, 0.75, 0.86, 0.98, 1.12, 1.28, 1.46, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.58, 1.61, 1.64, 1.67, 1.71, 1.74, 1.78, 1.81, 1.85, 1.89, 1.92, 1.96, 2.00, 2.04, 2.08, 2.12, 2.17, 2.21, 2.25, 2.30, 2.35, 2.39, 2.44, 2.49, 2.53, 2.56, 2.60, 2.63, 2.67, 2.70, 2.74, 2.78, 2.81, 2.85, 2.89, 2.93, 2.96, 3.00, 3.05, 3.09, 3.13, 3.17, 3.21, 3.25, 3.30, 3.34, 3.38, 3.43, 3.47, 3.52, 3.57, 3.62, 3.66, 3.71, 3.76, 3.81, 3.86, 3.91, 3.97, 4.02, 4.07, 4.13, 4.18, 4.24, 4.29, 4.35, 4.41, 4.47, 4.53, 4.59, 4.65, 4.71, 4.77, 4.84, 4.90, 4.97, 5.03, 5.10, 5.17, 5.24, 5.30, 5.38, 5.45, 5.52, 5.59, 5.67, 5.74, 5.82, 5.90, 5.98, 6.06, 6.14, 6.22, 6.30, 6.18, 6.03, 5.89, 5.75, 5.62, 5.48, 5.35, 5.23, 5.11, 4.99, 4.87, 4.75, 4.64, 4.53, 4.43, 4.32, 4.22, 4.12, 4.03, 3.93, 3.84, 3.75, 3.66 };
+
+void adjustHumanEar(float soundArray[]) {
+  for (int i = 0; i < NUM_BINS; i++) {
+    soundArray[i] *= HUMAN_MULTIPLIERS[i];
   }
 }
 

@@ -49,7 +49,7 @@ class TeensyFFT {
       readFreqs();
       saveOrigFreqs();
       //rollingSmooth(freqValues, 0.8);
-      adjustHumanEar(freqValues);
+      //adjustHumanEar(freqValues);
       
       rollingScaleToMax(freqValues);
       exaggerate(freqValues, 2);
