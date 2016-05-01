@@ -242,6 +242,7 @@ class TeensyFFT {
       }
     }
     println(">>>>>>>>>>>>> Couldn't find port! <<<<<<<<<<<<<<<");
+    exit();
   }
   
   color[] getStrip(int strip) {
