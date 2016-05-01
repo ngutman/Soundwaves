@@ -8,6 +8,7 @@ void soundFiltersSetup() {
 void processSound(float soundArray[]) {
   rollingSmooth(soundArray, 0.8);
   adjustHumanEar(soundArray);
+  rollingScaleToMax(soundArray);
 }
 
 
@@ -26,5 +27,34 @@ void adjustHumanEar(float soundArray[]) {
   for (int i = 0; i < NUM_BINS; i++) {
     soundArray[i] *= HUMAN_MULTIPLIERS[i];
   }
+}
+
+void rollingScaleToMax(float soundArray[]) {
+  static float avgPeak = 0.0;
+  static float falloff = 0.9;
+  
+  float peak = maxArray(soundArray, NUM_BINS);
+  if (peak > avgPeak) {
+    avgPeak = peak;
+  } else {
+    avgPeak *= falloff;
+    avgPeak += peak * (1 - falloff);
+  }
+  if (avgPeak == 0) {
+    return;
+  }
+  for (int i = 0; i < NUM_BINS; i++) {
+    soundArray[i] /= avgPeak;
+  }
+}
+
+float maxArray(float arr[], int arrayLength) {
+  float maxValue = arr[0];
+  for (int i = 0; i < arrayLength; i++) {
+    if (arr[i] > maxValue) {
+      maxValue = arr[i];
+    }
+  }
+  return maxValue;
 }
 

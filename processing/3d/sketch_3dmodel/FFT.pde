@@ -51,7 +51,7 @@ class TeensyFFT {
       //rollingSmooth(freqValues, 0.8);
       //adjustHumanEar(freqValues);
       
-      rollingScaleToMax(freqValues);
+      //rollingScaleToMax(freqValues);
       exaggerate(freqValues, 2);
       //normalizeSum(freqValues);
       calcDeltasAndAverages(freqValues, 0.8);
