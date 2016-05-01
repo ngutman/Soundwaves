@@ -52,7 +52,7 @@ class TeensyFFT {
       //adjustHumanEar(freqValues);
       
       //rollingScaleToMax(freqValues);
-      exaggerate(freqValues, 2);
+      //exaggerate(freqValues, 2);
       //normalizeSum(freqValues);
       calcDeltasAndAverages(freqValues, 0.8);
       exaggerate(deltas, 1);
@@ -114,9 +114,9 @@ class TeensyFFT {
     }
   }
   
-  void exaggerate(float[] freqValues, float power) {
+  void exaggerate(float[] freqValues, float exponent) {
     for (int i = 0; i < freqValues.length; i++) {
-      freqValues[i] = pow(freqValues[i], power);
+      freqValues[i] = pow(freqValues[i], exponent);
     }
   }
   

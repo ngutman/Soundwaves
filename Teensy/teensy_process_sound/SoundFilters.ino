@@ -9,8 +9,8 @@ void processSound(float soundArray[]) {
   rollingSmooth(soundArray, 0.8);
   adjustHumanEar(soundArray);
   rollingScaleToMax(soundArray);
+  exaggerate(soundArray, 2);
 }
-
 
 void rollingSmooth(float soundArray[], float smoothFactor) {
   float antiSmooth = 1 - smoothFactor;
@@ -45,6 +45,12 @@ void rollingScaleToMax(float soundArray[]) {
   }
   for (int i = 0; i < NUM_BINS; i++) {
     soundArray[i] /= avgPeak;
+  }
+}
+
+void exaggerate(float soundArray[], float exponent) {
+  for (int i = 0; i < NUM_BINS; i++) {
+    soundArray[i] = pow(soundArray[i], exponent);
   }
 }
 
