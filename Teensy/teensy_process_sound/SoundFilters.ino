@@ -40,7 +40,7 @@ void rollingScaleToMax(float soundArray[]) {
     avgPeak *= falloff;
     avgPeak += peak * (1 - falloff);
   }
-  if (avgPeak == 0) {
+  if (avgPeak < 0.01) {
     return;
   }
   for (int i = 0; i < NUM_BINS; i++) {
