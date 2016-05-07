@@ -20,6 +20,7 @@ class TeensyFFT {
   color[][] octaveLeds = new color[5][];
   
   color[][] pixelLeds = new color[8][];
+  color[][] teensyLeds = new color[8][];
   
   void setup(PApplet app) {
     initPort(app);
@@ -31,12 +32,17 @@ class TeensyFFT {
     for (int i = 0; i < 8; i++) {
       pixelLeds[i] = new color[LEDS];
     }
+    
+    for (int i = 0; i < 8; i++) {
+      teensyLeds[i] = new color[LEDS];
+    }
   }
   
   float[] averages = new float[TeensyFFT.NUM_FREQS];
   float[] deltas = new float[TeensyFFT.NUM_FREQS];
   
   float[] origFreqs = new float[TeensyFFT.NUM_FREQS];
+  
   
   void update() {
     colorMode(HSB, 360, 255, 255);
@@ -60,8 +66,13 @@ class TeensyFFT {
       //exaggerate(deltas, 1);
       //deltas = freqValues;
       //createBands(deltas);
-      readFreqs(bands);
-      animate();
+      //readFreqs(bands);
+      //animate();
+      readLedsFromTeensy(teensyLeds);
+      
+      pixelLeds = teensyLeds;
+      audio2.moveStrips(pixelLeds, 0);
+      //println(teensyLeds[0][0]);
     }
     
     colorMode(RGB);
@@ -229,6 +240,18 @@ class TeensyFFT {
     for (int i = 0; i < ar.length; i++) {
      ar[i] = float(values[i]); 
     }
+  }
+  
+  void readLedsFromTeensy(color[][] leds) {
+    String[] values = myString.split(" ");
+    int valuesPerStrip = values.length / 8;
+    
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < valuesPerStrip; j++) {
+        leds[i][j] = 0xFF000000 + int(values[i*valuesPerStrip + j]);
+      }
+    }
+    //println(leds[0]);
   }
 
   float[] getFreqValues() {

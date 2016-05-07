@@ -1,29 +1,11 @@
+#ifndef SOUND_FILTERS_H
+#define SOUND_FILTERS_H
+
+#include "Globals.h"
+#include "Arduino.h"
 
 float smoothFreqValues[NUM_BINS];
 float averages[NUM_BINS];
-
-void soundFiltersSetup() {
-  memset(smoothFreqValues, 0, sizeof(smoothFreqValues));
-  memset(averages, 0, sizeof(averages));
-}
-
-void processSound(float soundArray[], float deltas[]) {
-  rollingSmooth(soundArray, 0.8);
-  adjustHumanEar(soundArray);
-  rollingScaleToMax(soundArray);
-  exaggerate(soundArray, 2);
-
-  calcDeltasAndAverages(deltas, soundArray, 0.8);
-}
-
-void calcDeltasAndAverages(float deltas[], float soundArray[], float deltaFactor) {
-  float averageFactor = 0.9;
-  
-  for (int i = 0; i < NUM_BINS; i++) {
-    averages[i] = averages[i] * averageFactor + soundArray[i] * (1 - averageFactor);
-    deltas[i] = max(soundArray[i] - averages[i]*deltaFactor, 0);
-  }
-}
 
 void rollingSmooth(float soundArray[], float smoothFactor) {
   float antiSmooth = 1 - smoothFactor;
@@ -40,6 +22,16 @@ void adjustHumanEar(float soundArray[]) {
   for (int i = 0; i < NUM_BINS; i++) {
     soundArray[i] *= HUMAN_MULTIPLIERS[i];
   }
+}
+
+float maxArray(float arr[], int arrayLength) {
+  float maxValue = arr[0];
+  for (int i = 0; i < arrayLength; i++) {
+    if (arr[i] > maxValue) {
+      maxValue = arr[i];
+    }
+  }
+  return maxValue;
 }
 
 void rollingScaleToMax(float soundArray[]) {
@@ -61,21 +53,36 @@ void rollingScaleToMax(float soundArray[]) {
   }
 }
 
+void calcDeltasAndAverages(float deltas[], float soundArray[], float deltaFactor) {
+  float averageFactor = 0.9;
+  
+  for (int i = 0; i < NUM_BINS; i++) {
+    averages[i] = averages[i] * averageFactor + soundArray[i] * (1 - averageFactor);
+    deltas[i] = max(soundArray[i] - averages[i]*deltaFactor, 0);
+  }
+}
+
 void exaggerate(float soundArray[], float exponent) {
   for (int i = 0; i < NUM_BINS; i++) {
     soundArray[i] = pow(soundArray[i], exponent);
   }
 }
 
-float maxArray(float arr[], int arrayLength) {
-  float maxValue = arr[0];
-  for (int i = 0; i < arrayLength; i++) {
-    if (arr[i] > maxValue) {
-      maxValue = arr[i];
-    }
-  }
-  return maxValue;
+void soundFiltersSetup() {
+  memset(smoothFreqValues, 0, sizeof(smoothFreqValues));
+  memset(averages, 0, sizeof(averages));
 }
+
+void processSound(float soundArray[], float deltas[]) {
+  rollingSmooth(soundArray, 0.8);
+  adjustHumanEar(soundArray);
+  rollingScaleToMax(soundArray);
+  exaggerate(soundArray, 2);
+
+  calcDeltasAndAverages(deltas, soundArray, 0.8);
+}
+
+float processBand(float f[], int startIndex, int numValues);
 
 void createBands(float f[], float bands[]) {
   bands[0] = processBand(f, 0, 2);
@@ -90,3 +97,4 @@ float processBand(float f[], int startIndex, int numValues) {
   return maxArray(&f[startIndex], numValues);
 }
 
+#endif

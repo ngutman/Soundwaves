@@ -1,10 +1,17 @@
+#define NUM_STRIPS 8
+#define NUM_LEDS_PER_STRIP 230
+
+#define USE_OCTOWS2811
+#include <OctoWS2811.h>
+#include <FastLED.h>
 #include <Audio.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-
-#define NUM_BINS 140
+#include "Globals.h"
+#include "SoundFilters.h"
+#include "Animations.h"
 
 const int myInput = AUDIO_INPUT_LINEIN;
 AudioInputI2S          audioInput;
@@ -16,7 +23,12 @@ float deltas[NUM_BINS];
 float soundArray[NUM_BINS];
 float bands[6];
 
+CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
+
+
 void setup() {
+  LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
+  
   // Audio connections require memory to work.  For more
   // detailed information, see the MemoryAndCpuUsage example
   AudioMemory(12);
@@ -34,6 +46,9 @@ void setup() {
   memset(deltas, 0, sizeof(deltas));
 }
 
+void printArrayToSerial(float soundArray[], int arrayLength);
+void printLedsToSerial(CRGB leds[]);
+
 void loop() {
   int i;
 
@@ -43,11 +58,31 @@ void loop() {
     }
     processSound(soundArray, deltas);
     createBands(deltas, bands);
+    bandsAnimation(bands, leds);
 
 //    printArrayToSerial(soundArray, NUM_BINS);
 //    printArrayToSerial(deltas, NUM_BINS);
-    printArrayToSerial(bands, 6);
+//    printArrayToSerial(bands, 6);
+    printLedsToSerial(leds);
   }
+
+  EVERY_N_MILLIS(1000) {
+//    Serial.print("FastLED.getFPS: ");
+//    Serial.println(FastLED.getFPS());
+  }
+
+  FastLED.show();
+}
+
+void printLedsToSerial(CRGB leds[]) {
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 1; j++) {
+      CRGB pixel = leds[i*NUM_LEDS_PER_STRIP + j];
+      Serial.print(pixel.r*256*256 + pixel.g*256 + pixel.b);
+      Serial.print(" ");
+    }
+  }
+  Serial.println();
 }
 
 void printArrayToSerial(float soundArray[], int arrayLength) {
