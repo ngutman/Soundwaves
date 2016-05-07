@@ -100,7 +100,7 @@ class Structure {
     
     fill(leds[horn][led]);
     noStroke();
-    rect(0, 0, LED_SIZE, LED_SIZE);
+    box(LED_SIZE);
     
     popMatrix();
   }
