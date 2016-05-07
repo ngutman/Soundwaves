@@ -48,12 +48,13 @@ class TeensyFFT {
       }
       readFreqs();
       saveOrigFreqs();
-      //rollingSmooth(freqValues, 0.8);
-      //adjustHumanEar(freqValues);
+      rollingSmooth(freqValues, 0.8);
+      adjustHumanEar(freqValues);
+      rollingScaleToMax(freqValues);
+      exaggerate(freqValues, 2);
       
-      //rollingScaleToMax(freqValues);
-      //exaggerate(freqValues, 2);
       //normalizeSum(freqValues);
+      
       calcDeltasAndAverages(freqValues, 0.8);
       exaggerate(deltas, 1);
       createBands(deltas);
@@ -205,7 +206,7 @@ class TeensyFFT {
   }
   
   float processBand(float[] ar) {
-    return max(ar);
+    return pow(max(ar), 1);
   }
   
   float sineSum(float[] ar) {

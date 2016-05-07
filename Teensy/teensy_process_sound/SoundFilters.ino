@@ -6,10 +6,10 @@ void soundFiltersSetup() {
 }
 
 void processSound(float soundArray[]) {
-  rollingSmooth(soundArray, 0.8);
-  adjustHumanEar(soundArray);
-  rollingScaleToMax(soundArray);
-  exaggerate(soundArray, 2);
+//  rollingSmooth(soundArray, 0.8);
+//  adjustHumanEar(soundArray);
+//  rollingScaleToMax(soundArray);
+//  exaggerate(soundArray, 2);
 }
 
 void rollingSmooth(float soundArray[], float smoothFactor) {
