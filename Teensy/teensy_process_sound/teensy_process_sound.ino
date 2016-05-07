@@ -12,6 +12,9 @@ AudioAnalyzeFFT1024    myFFT;
 AudioConnection patchCord1(audioInput, 0, myFFT, 0);
 AudioControlSGTL5000 audioShield;
 
+float deltas[NUM_BINS];
+float soundArray[NUM_BINS];
+
 void setup() {
   // Audio connections require memory to work.  For more
   // detailed information, see the MemoryAndCpuUsage example
@@ -26,9 +29,9 @@ void setup() {
   myFFT.windowFunction(AudioWindowHanning1024);
 
   soundFiltersSetup();
-}
 
-float soundArray[NUM_BINS];
+  memset(deltas, 0, sizeof(deltas));
+}
 
 void loop() {
   int i;
@@ -37,9 +40,10 @@ void loop() {
     for (i = 0; i < NUM_BINS; i++) {
       soundArray[i] = myFFT.read(i);
     }
-    processSound(soundArray);
+    processSound(soundArray, deltas);
 
-    printArrayToSerial(soundArray);
+//    printArrayToSerial(soundArray);
+    printArrayToSerial(deltas);
   }
 }
 

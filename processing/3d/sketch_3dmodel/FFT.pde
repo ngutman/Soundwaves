@@ -48,15 +48,17 @@ class TeensyFFT {
       }
       readFreqs();
       saveOrigFreqs();
-      rollingSmooth(freqValues, 0.8);
-      adjustHumanEar(freqValues);
-      rollingScaleToMax(freqValues);
-      exaggerate(freqValues, 2);
+      
+      //rollingSmooth(freqValues, 0.8);
+      //adjustHumanEar(freqValues);
+      //rollingScaleToMax(freqValues);
+      //exaggerate(freqValues, 2);
       
       //normalizeSum(freqValues);
       
-      calcDeltasAndAverages(freqValues, 0.8);
-      exaggerate(deltas, 1);
+      //calcDeltasAndAverages(freqValues, 0.8);
+      //exaggerate(deltas, 1);
+      deltas = freqValues;
       createBands(deltas);
       animate();
     }

@@ -1,15 +1,28 @@
 
 float smoothFreqValues[NUM_BINS];
+float averages[NUM_BINS];
 
 void soundFiltersSetup() {
   memset(smoothFreqValues, 0, sizeof(smoothFreqValues));
+  memset(averages, 0, sizeof(averages));
 }
 
-void processSound(float soundArray[]) {
-//  rollingSmooth(soundArray, 0.8);
-//  adjustHumanEar(soundArray);
-//  rollingScaleToMax(soundArray);
-//  exaggerate(soundArray, 2);
+void processSound(float soundArray[], float deltas[]) {
+  rollingSmooth(soundArray, 0.8);
+  adjustHumanEar(soundArray);
+  rollingScaleToMax(soundArray);
+  exaggerate(soundArray, 2);
+
+  calcDeltasAndAverages(deltas, soundArray, 0.8);
+}
+
+void calcDeltasAndAverages(float deltas[], float soundArray[], float deltaFactor) {
+  float averageFactor = 0.9;
+  
+  for (int i = 0; i < NUM_BINS; i++) {
+    averages[i] = averages[i] * averageFactor + soundArray[i] * (1 - averageFactor);
+    deltas[i] = max(soundArray[i] - averages[i]*deltaFactor, 0);
+  }
 }
 
 void rollingSmooth(float soundArray[], float smoothFactor) {
