@@ -1,7 +1,7 @@
 
 
-HUMAN_FREQUENCIES = [0,  50, 100, 200, 500, 1000, 2000, 5000, 10000, 15000, 20000];
-HUMAN_CORRECTION =  [-4, -4,  -4,  -2,   2,    2,    4,    8,    -4,     0,    -4];
+HUMAN_FREQUENCIES = [0,  50, 100, 200, 300, 500, 1000, 2000, 5000, 10000, 15000, 20000];
+HUMAN_CORRECTION =  [-4, -4,  -4,  -2,   2,   2,    2,    4,    8,    -4,     0,    -4];
 
 
 def calc_multipliers(num_bins, freq_per_bin):
