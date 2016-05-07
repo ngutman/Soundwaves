@@ -28,7 +28,7 @@ class SimpleStructure {
   }
   
   void drawBands(float[] bands) {
-    drawBarsInternal(bands, 255, 300);
+    drawBarsInternal(bands, 255, 500);
   }
   
   void drawBarsInternal(float[] freqValues, int fillColor, int barStartY) {
@@ -51,7 +51,7 @@ class SimpleStructure {
   
   void drawAverages(float[] averages, float[] deltas) {
     //drawBarsInternal(averages, 150, 0);
-    //drawBarsInternal(deltas, 150, 0);
+    drawBarsInternal(deltas, 300, 300);
   }
   
   
