@@ -77,3 +77,16 @@ float maxArray(float arr[], int arrayLength) {
   return maxValue;
 }
 
+void createBands(float f[], float bands[]) {
+  bands[0] = processBand(f, 0, 2);
+  bands[1] = processBand(f, 2, 4);
+  bands[2] = processBand(f, 7, 9);
+  bands[3] = processBand(f, 17, 17);
+  bands[4] = processBand(f, 35, 24);
+  bands[5] = processBand(f, 60, 80);
+}
+
+float processBand(float f[], int startIndex, int numValues) {
+  return maxArray(&f[startIndex], numValues);
+}
+

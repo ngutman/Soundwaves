@@ -14,6 +14,7 @@ AudioControlSGTL5000 audioShield;
 
 float deltas[NUM_BINS];
 float soundArray[NUM_BINS];
+float bands[6];
 
 void setup() {
   // Audio connections require memory to work.  For more
@@ -41,14 +42,16 @@ void loop() {
       soundArray[i] = myFFT.read(i);
     }
     processSound(soundArray, deltas);
+    createBands(deltas, bands);
 
-//    printArrayToSerial(soundArray);
-    printArrayToSerial(deltas);
+//    printArrayToSerial(soundArray, NUM_BINS);
+//    printArrayToSerial(deltas, NUM_BINS);
+    printArrayToSerial(bands, 6);
   }
 }
 
-void printArrayToSerial(float soundArray[]) {
-  for (int i = 0; i < NUM_BINS; i++) {
+void printArrayToSerial(float soundArray[], int arrayLength) {
+  for (int i = 0; i < arrayLength; i++) {
     Serial.print(soundArray[i]);
     Serial.print(" ");
   }

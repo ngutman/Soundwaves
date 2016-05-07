@@ -46,8 +46,8 @@ class TeensyFFT {
       if (myString == null) {
         continue;
       }
-      readFreqs();
-      saveOrigFreqs();
+      //readFreqs(freqValues);
+      //saveOrigFreqs();
       
       //rollingSmooth(freqValues, 0.8);
       //adjustHumanEar(freqValues);
@@ -58,8 +58,9 @@ class TeensyFFT {
       
       //calcDeltasAndAverages(freqValues, 0.8);
       //exaggerate(deltas, 1);
-      deltas = freqValues;
-      createBands(deltas);
+      //deltas = freqValues;
+      //createBands(deltas);
+      readFreqs(bands);
       animate();
     }
     
@@ -219,14 +220,14 @@ class TeensyFFT {
     return s;
   }
   
-  void readFreqs() {
+  void readFreqs(float[] ar) {
     String[] values = myString.split(" ");
-    if (values.length < freqValues.length) {
+    if (values.length < ar.length) {
       return;
     }
     
-    for (int i = 0; i < freqValues.length; i++) {
-     freqValues[i] = float(values[i]); 
+    for (int i = 0; i < ar.length; i++) {
+     ar[i] = float(values[i]); 
     }
   }
 
