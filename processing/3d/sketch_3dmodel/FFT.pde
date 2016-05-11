@@ -58,7 +58,7 @@ class TeensyFFT {
       readFreqs(freqValues);
       saveOrigFreqs();
       
-      rollingSmooth(freqValues, 0.5);
+      rollingSmooth(freqValues, 0.1);
       adjustHumanEar(freqValues);
       rollingScaleToMax(freqValues);
       exaggerate(freqValues, 2);
@@ -154,7 +154,8 @@ class TeensyFFT {
   void animate() {
     //drawBeam();
     //drawAudio1();
-    drawAudio2();
+    //drawAudio2();
+    drawAudio3();
     /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
@@ -170,6 +171,11 @@ class TeensyFFT {
   Audio2 audio2 = new Audio2();
   void drawAudio2() {
    audio2.draw(pixelLeds, freqValues, deltas, averages, deltaBands);
+  }
+  
+  Audio3 audio3 = new Audio3();
+  void drawAudio3() {
+   audio3.draw(pixelLeds, deltaBands, averageBands);
   }
   
   BeamAnimation beamAnimation = new BeamAnimation();

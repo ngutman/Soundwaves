@@ -8,7 +8,7 @@ SimpleStructure simple = new SimpleStructure();
 
 color[][] leds;
 
-boolean USE_3D = false;
+boolean USE_3D = true;
 
 void settings() {
   if (USE_3D) {
@@ -56,7 +56,7 @@ void draw() {
   frames++;
   if (millis() > startMillis + 1000) {
     startMillis = millis();
-    println("FPS: ", frames);
+    frame.setTitle("fps: " + frameRate);
     frames = 0;
   }
 }
