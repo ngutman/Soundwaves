@@ -37,12 +37,21 @@ class Structure {
   
     drawMembrane();
     
+    drawBox();
+    
     for (int i = 0; i < HORNS; i++) {
       drawHorn(i);
     }
     
     drawRing();
     drawFloor();
+  }
+  
+  void drawBox() {
+    pushMatrix();
+    translate(0, -50, -250);
+    box(500, 350, 500);
+    popMatrix();
   }
   
   void drawFloor() {
