@@ -8,14 +8,17 @@ class Audio3 extends BaseAnimation {
     mirrorStrips(pixelLeds);
     
     int pixelsPerSecond;
-    if (bands[0] > 0.2) {
-      pixelsPerSecond = int(map(averageBands[0], 0, 1, 100, 400));
+    int minSpeed = 150;
+    int maxSpeed = 450;
+    if (bands[0] > 0.3) {
+      pixelsPerSecond = int(map(averageBands[0], 0.3, 1, minSpeed, maxSpeed));
     } else {
-      pixelsPerSecond = 100;
+      pixelsPerSecond = minSpeed;
     }
     moveStrips(pixelLeds, 0, pixelsPerSecond);
     
     fill(255);
     text("speed: " + pixelsPerSecond, 0, 150);
+    //println("speed: " + pixelsPerSecond);
   }
 }
