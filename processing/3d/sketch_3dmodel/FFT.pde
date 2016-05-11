@@ -42,8 +42,11 @@ class TeensyFFT {
   float[] deltas = new float[TeensyFFT.NUM_FREQS];
   
   float[] origFreqs = new float[TeensyFFT.NUM_FREQS];
+  float[] deltaBands = new float[6];
+  float[] averageBands = new float[6];
   
-  
+  int frames = 0;
+  int startMillis = millis();
   void update() {
     colorMode(HSB, 360, 255, 255);
     
@@ -52,27 +55,35 @@ class TeensyFFT {
       if (myString == null) {
         continue;
       }
-      //readFreqs(freqValues);
-      //saveOrigFreqs();
+      readFreqs(freqValues);
+      saveOrigFreqs();
       
-      //rollingSmooth(freqValues, 0.8);
-      //adjustHumanEar(freqValues);
-      //rollingScaleToMax(freqValues);
-      //exaggerate(freqValues, 2);
+      rollingSmooth(freqValues, 0.5);
+      adjustHumanEar(freqValues);
+      rollingScaleToMax(freqValues);
+      exaggerate(freqValues, 2);
       
       //normalizeSum(freqValues);
       
-      //calcDeltasAndAverages(freqValues, 0.8);
+      calcDeltasAndAverages(freqValues, 0.8);
       //exaggerate(deltas, 1);
       //deltas = freqValues;
-      //createBands(deltas);
+      deltaBands = createBands(deltas);
+      averageBands = createBands(averages);
       //readFreqs(bands);
-      //animate();
-      readLedsFromTeensy(teensyLeds);
+      animate();
       
-      pixelLeds = teensyLeds;
-      audio2.moveStrips(pixelLeds, 0);
+      //readLedsFromTeensy(teensyLeds);
+      //pixelLeds = teensyLeds;
+      //audio2.moveStrips(pixelLeds, 0);
       //println(teensyLeds[0][0]);
+      
+      frames++;
+      if (millis() > startMillis + 1000) {
+        startMillis = millis();
+        println("FFT FPS: ", frames);
+        frames = 0;
+      }
     }
     
     colorMode(RGB);
@@ -84,7 +95,7 @@ class TeensyFFT {
     }
   }
   
-  float averageFactor = 0.9;
+  float averageFactor = 0.95;
   void calcDeltasAndAverages(float[] freqValues, float deltaFactor) {
     for (int i = 0; i < freqValues.length; i++) {
       averages[i] = averages[i] * averageFactor + freqValues[i] * (1 - averageFactor);
@@ -158,7 +169,7 @@ class TeensyFFT {
   
   Audio2 audio2 = new Audio2();
   void drawAudio2() {
-   audio2.draw(pixelLeds, freqValues, deltas, averages, bands);
+   audio2.draw(pixelLeds, freqValues, deltas, averages, deltaBands);
   }
   
   BeamAnimation beamAnimation = new BeamAnimation();
@@ -209,14 +220,15 @@ class TeensyFFT {
     }
   }
   
-  float bands[] = new float[6];
-  void createBands(float[] f) {
+  float[] createBands(float[] f) {
+    float bands[] = new float[6];
     bands[0] = processBand(subset(f, 0, 2));
     bands[1] = processBand(subset(f, 2, 4));
     bands[2] = processBand(subset(f, 7, 9));
     bands[3] = processBand(subset(f, 17, 17));
     bands[4] = processBand(subset(f, 35, 24));
     bands[5] = processBand(subset(f, 60, 80));
+    return bands;
   }
   
   float processBand(float[] ar) {

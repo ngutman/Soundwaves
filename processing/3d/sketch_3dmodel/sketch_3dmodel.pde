@@ -30,6 +30,8 @@ void setup() {
     leds[i] = new color[LEDS]; 
   }
   println("num leds", LEDS);
+  
+  frameRate(150);
 }
 
 int startMillis = 0;
@@ -48,7 +50,7 @@ void draw() {
     simple.drawStructure(leds);
     simple.drawBars(teensyFFT.getFreqValues(), teensyFFT.origFreqs);
     simple.drawAverages(teensyFFT.averages, teensyFFT.deltas);
-    simple.drawBands(teensyFFT.bands);
+    simple.drawBands(teensyFFT.deltaBands, teensyFFT.averageBands);
   }
   
   frames++;

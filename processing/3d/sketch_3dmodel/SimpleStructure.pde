@@ -27,8 +27,24 @@ class SimpleStructure {
     drawBarsInternal(origFreqs, 255, 0);
   }
   
-  void drawBands(float[] bands) {
-    drawBarsInternal(bands, 255, 500);
+  void drawBands(float[] deltaBands, float[] averageBands) {
+    drawBarsInternal(deltaBands, 255, 500);
+    
+    pushMatrix();
+    translate(400, 0);
+    drawBarsInternal(averageBands, 255, 500);
+    
+    translate(300, 270);
+    for (int i = 0; i < 6; i++) {
+      if ((deltaBands[i]+averageBands[i]) > averageBands[i]*1.3) {
+        fill(255);
+      } else {
+        fill(100);
+      }
+      rect(0, 0, 30, 30);
+      translate(35, 0);
+    }
+    popMatrix();
   }
   
   void drawBarsInternal(float[] freqValues, int fillColor, int barStartY) {
