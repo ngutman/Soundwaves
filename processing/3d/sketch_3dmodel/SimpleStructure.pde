@@ -23,16 +23,16 @@ class SimpleStructure {
   int barMargin = 1;
   
   void drawBars(float[] freqValues, float[] origFreqs) {
-    drawBarsInternal(freqValues, 255, 150);
-    drawBarsInternal(origFreqs, 255, 0);
+    drawBarsInternal(freqValues, 255, 150, null);
+    drawBarsInternal(origFreqs, 255, 0, null);
   }
   
   void drawBands(float[] deltaBands, float[] averageBands) {
-    drawBarsInternal(deltaBands, 255, 500);
+    drawBarsInternal(deltaBands, 255, 500, null);
     
     pushMatrix();
     translate(400, 0);
-    drawBarsInternal(averageBands, 255, 500);
+    drawBarsInternal(averageBands, 255, 500, null);
     
     translate(300, 270);
     for (int i = 0; i < 6; i++) {
@@ -47,7 +47,7 @@ class SimpleStructure {
     popMatrix();
   }
   
-  void drawBarsInternal(float[] freqValues, int fillColor, int barStartY) {
+  void drawBarsInternal(float[] freqValues, int fillColor, int barStartY, int[][] bandsGrouping) {
     float lastX = initialOffset;
     float lastWidth = 0;
     int maxHeight = 100;
@@ -60,14 +60,28 @@ class SimpleStructure {
       lastX = lastX + lastWidth + barMargin;
       lastWidth = adjustedWidth;
       fill(200);
-      //text(freqValues[i], lastX, 250);
+      
+      if (bandsGrouping != null) {
+        if (isLastBarInGroup(bandsGrouping, i)) {
+          rect(lastX, barStartY+100, 2, 100);
+        }
+      }
     }
     
   }
   
-  void drawAverages(float[] averages, float[] deltas) {
+  boolean isLastBarInGroup(int[][] bandsGrouping, int band) {
+    for (int i = 0; i < bandsGrouping.length; i++) {
+      if (bandsGrouping[i][0] + bandsGrouping[i][1] == band) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  void drawAverages(float[] averages, float[] deltas, int[][] bandsGrouping) {
     //drawBarsInternal(averages, 150, 0);
-    drawBarsInternal(deltas, 300, 300);
+    drawBarsInternal(deltas, 300, 300, bandsGrouping);
   }
   
   

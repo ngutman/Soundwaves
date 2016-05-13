@@ -8,7 +8,7 @@ SimpleStructure simple = new SimpleStructure();
 
 color[][] leds;
 
-boolean USE_3D = true;
+boolean USE_3D = false;
 
 void settings() {
   if (USE_3D) {
@@ -49,7 +49,7 @@ void draw() {
   } else {
     simple.drawStructure(leds);
     simple.drawBars(teensyFFT.getFreqValues(), teensyFFT.origFreqs);
-    simple.drawAverages(teensyFFT.averages, teensyFFT.deltas);
+    simple.drawAverages(teensyFFT.averages, teensyFFT.deltas, teensyFFT.bandsGrouping);
     simple.drawBands(teensyFFT.deltaBands, teensyFFT.averageBands);
   }
   
