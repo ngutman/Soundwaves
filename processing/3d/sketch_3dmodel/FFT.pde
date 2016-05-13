@@ -51,11 +51,18 @@ class TeensyFFT {
     colorMode(HSB, 360, 255, 255);
     
     while (myPort.available() > 0) {
-      myString = myPort.readStringUntil(10);
-      if (myString == null) {
-        continue;
-      }
-      readFreqs(freqValues);
+     myString = myPort.readStringUntil(10);
+     if (myString == null) {
+       continue;
+     }
+     readFreqs(freqValues);
+    //if (myPort.available() > 0) {
+      //String aString = myPort.readStringUntil(10);
+      //if (aString != null) {
+        //myString = aString;
+      //}
+    //}
+      //readFreqs(freqValues);
       saveOrigFreqs();
       
       rollingSmooth(freqValues, 0.8);
@@ -154,8 +161,8 @@ class TeensyFFT {
   void animate() {
     //drawBeam();
     //drawAudio1();
-    //drawAudio2();
-    drawAudio3();
+    drawAudio2();
+    //drawAudio3();
     /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
@@ -226,14 +233,13 @@ class TeensyFFT {
     }
   }
   
+  int[][] bandsGrouping = {{0,2}, {3,4}, {8,8}, {17,17}, {35,24}, {60,80}};
+  
   float[] createBands(float[] f) {
     float bands[] = new float[6];
-    bands[0] = processBand(subset(f, 0, 2));
-    bands[1] = processBand(subset(f, 2, 4));
-    bands[2] = processBand(subset(f, 7, 9));
-    bands[3] = processBand(subset(f, 17, 17));
-    bands[4] = processBand(subset(f, 35, 24));
-    bands[5] = processBand(subset(f, 60, 80));
+    for (int i = 0; i < 6; i++) {
+      bands[i] = processBand(subset(f, bandsGrouping[i][0], bandsGrouping[i][1]));
+    }
     return bands;
   }
   
