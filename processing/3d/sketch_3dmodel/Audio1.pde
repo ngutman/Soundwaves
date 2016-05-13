@@ -4,6 +4,8 @@ class Audio1 {
   float rollingMaxAvg = 0;
   
   void draw(color[][] pixelLeds, float[] freqValues) {
+    colorMode(HSB, 360, 255, 255);
+    
     float bass = sumFreqs(freqValues, 0, 3) / 4;
     pixelLeds[0][0] = color(0, 255, 255*bass);
     pixelLeds[2][0] = pixelLeds[0][0];

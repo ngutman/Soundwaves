@@ -6,6 +6,7 @@ class Audio3 extends BaseAnimation {
   float rollingBpm;
   
   void draw(color[][] pixelLeds, float[] bands, float[] averageBands) {
+    colorMode(HSB, 360, 255, 255);
     pixelLeds[0][0] = color(getHue(0), 150, 255*bands[0]*2);
     pixelLeds[1][0] = color(getHue(60), 150, 255*bands[1]);
     //pixelLeds[2][0] = color(getHue(240), 150, 255*(bands[3]+bands[2]));

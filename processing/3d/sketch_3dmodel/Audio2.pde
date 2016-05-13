@@ -6,6 +6,7 @@ class Audio2 extends BaseAnimation {
   float lastBass = 0;
   
   void draw(color[][] pixelLeds, float[] freqValues, float[] deltas, float[] averages, float[] bands) {
+    colorMode(HSB, 360, 255, 255);
     pixelLeds[0][0] = color(getHue(0), 150, getBrightness(255*bands[0]*2));
     pixelLeds[1][0] = color(getHue(60), 150, getBrightness(255*bands[1]*1.5));
     pixelLeds[2][0] = color(getHue(240), 150, getBrightness(255*1.5*(bands[3]+bands[2])));
@@ -13,7 +14,7 @@ class Audio2 extends BaseAnimation {
     mirrorStrips(pixelLeds);
     
     moveStrips(pixelLeds, 0);
-    //shiftHue();
+    shiftHue();
   }
   
   int getBrightness(float val) {
@@ -24,7 +25,7 @@ class Audio2 extends BaseAnimation {
   }
   
   int lastHueShift = millis();
-  int shiftHueEvery = 150;
+  int shiftHueEvery = 300;
   void shiftHue() {
     int timePassed = millis() - lastHueShift;
     if (timePassed < shiftHueEvery) {

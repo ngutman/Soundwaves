@@ -29,12 +29,25 @@ abstract class BaseAnimation {
     lastMove = millis();
     for (int i = 0; i < pixelLeds.length; i++) {
       shiftArrayRight(pixelLeds[i], pixelsToMove, startIndex);
+      fadeTail(pixelLeds[i], 45, 0.95);
     }
   }
   
   void shiftArrayRight(color[] pixelLeds, int moveBy, int startIndex) {
     for (int i = pixelLeds.length - 1; i >= moveBy + startIndex; i--) {
       pixelLeds[i] = pixelLeds[i - moveBy];
+    }
+  }
+  
+  void fadeTail(color[] pixelLeds, int tailSize, float fadePerPixel) {
+    colorMode(RGB);
+    for (int i = 0; i < tailSize; i++) {
+      int index = pixelLeds.length - 1 - i;
+      color v = pixelLeds[index];
+      float r = red(v);
+      float g = green(v);
+      float b = blue(v);
+      pixelLeds[index] = color(r*fadePerPixel, g*fadePerPixel, b*fadePerPixel);
     }
   }
 }
