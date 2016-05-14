@@ -21,10 +21,10 @@ class Audio4 {
       drawCircle(pixelLeds[5], i+37, bands[5], color(255, 0, 255));
       drawCircle(pixelLeds[7], i+13, bands[5], color(255, 0, 255));
       
-      drawCircle(pixelLeds[0], i+2, bands[2], color(0, 255, 255));
-      drawCircle(pixelLeds[2], i+17, bands[2], color(0, 255, 255));
-      drawCircle(pixelLeds[4], i+34, bands[2], color(0, 255, 255));
-      drawCircle(pixelLeds[6], i+10, bands[2], color(0, 255, 255));
+      drawCircle(pixelLeds[0], i+17, bands[2], color(0, 255, 255));
+      drawCircle(pixelLeds[2], i+32, bands[2], color(0, 255, 255));
+      drawCircle(pixelLeds[4], i+9, bands[2], color(0, 255, 255));
+      drawCircle(pixelLeds[6], i+25, bands[2], color(0, 255, 255));
     }
   }
   
@@ -40,7 +40,7 @@ class Audio4 {
     
     float e = (1-energy)*255;
     color startColor = fade(baseColor, e);
-    strip[i] = startColor;
+    strip[i] += startColor;
     for (int j = 1; j < 10 && (i+j) < strip.length; j++) {
       color c = fade(startColor, 255 * j/10);
       strip[i+j] += c;
@@ -62,7 +62,7 @@ class Audio4 {
     for (int i = 0; i < pixelLeds.length; i++) {
       color[] strip = pixelLeds[i];
       for (int j = 0; j < strip.length; j++) {
-        strip[j] = fade(strip[j], 200);
+        strip[j] = fade(strip[j], 60);
       }
     }
   }
