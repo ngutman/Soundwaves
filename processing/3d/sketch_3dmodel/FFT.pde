@@ -51,33 +51,26 @@ class TeensyFFT {
     colorMode(HSB, 360, 255, 255);
     
     while (myPort.available() > 0) {
-     myString = myPort.readStringUntil(10);
-     if (myString == null) {
-       continue;
-     }
-     readFreqs(freqValues);
-    //if (myPort.available() > 0) {
-      //String aString = myPort.readStringUntil(10);
-      //if (aString != null) {
-        //myString = aString;
-      //}
-    //}
+      myString = myPort.readStringUntil(10);
+      if (myString == null) {
+        continue;
+      }
       //readFreqs(freqValues);
-      saveOrigFreqs();
+    
+      //saveOrigFreqs();
       
-      rollingSmooth(freqValues, 0.8);
-      adjustHumanEar(freqValues);
-      rollingScaleToMax(freqValues);
-      exaggerate(freqValues, 2);
+      //rollingSmooth(freqValues, 0.7);
+      //adjustHumanEar(freqValues);
+      //rollingScaleToMax(freqValues);
+      //exaggerate(freqValues, 2);
       
       //normalizeSum(freqValues);
       
-      calcDeltasAndAverages(freqValues, 0.8);
-      //exaggerate(deltas, 1);
+      //calcDeltasAndAverages(freqValues, 0.8);
       //deltas = freqValues;
-      deltaBands = createBands(deltas);
-      averageBands = createBands(averages);
-      //readFreqs(bands);
+      //deltaBands = createBands(deltas);
+      //averageBands = createBands(averages);
+      readFreqs(deltaBands);
       animate();
       
       //readLedsFromTeensy(teensyLeds);
@@ -163,6 +156,7 @@ class TeensyFFT {
     //drawAudio1();
     drawAudio2();
     //drawAudio3();
+    //drawAudio4();
     /*
     for (int octaveIndex = 0; octaveIndex < octaveLeds.length; octaveIndex++) {
       drawOctave(octaveIndex);
@@ -183,6 +177,11 @@ class TeensyFFT {
   Audio3 audio3 = new Audio3();
   void drawAudio3() {
    audio3.draw(pixelLeds, deltaBands, averageBands);
+  }
+  
+  Audio4 audio4 = new Audio4();
+  void drawAudio4() {
+   audio4.draw(pixelLeds, deltaBands);
   }
   
   BeamAnimation beamAnimation = new BeamAnimation();
