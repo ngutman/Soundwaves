@@ -1,5 +1,6 @@
 #define NUM_STRIPS 8
-#define NUM_LEDS_PER_STRIP 230
+#define NUM_LEDS_PER_STRIP 75
+#define MOVE_PIXEL_EVERY_X_MS 5
 
 #define USE_OCTOWS2811
 #include <OctoWS2811.h>
@@ -23,6 +24,9 @@ float deltas[NUM_BINS];
 float soundArray[NUM_BINS];
 float bands[6];
 
+// Pin layouts on the teensy 3:
+// OctoWS2811: 2,14,7,8,6,20,21,5
+
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
 
 
@@ -44,12 +48,17 @@ void setup() {
   soundFiltersSetup();
 
   memset(deltas, 0, sizeof(deltas));
+
+  FastLED.setBrightness(200);
 }
 
 void printArrayToSerial(float soundArray[], int arrayLength);
 void printLedsToSerial(CRGB leds[]);
+void setBrightnessFromPot();
 
 void loop() {
+  setBrightnessFromPot();
+  
   int i;
 
   if (myFFT.available()) {
@@ -62,8 +71,8 @@ void loop() {
 
 //    printArrayToSerial(soundArray, NUM_BINS);
 //    printArrayToSerial(deltas, NUM_BINS);
-//    printArrayToSerial(bands, 6);
-    printLedsToSerial(leds);
+    printArrayToSerial(bands, 6);
+//    printLedsToSerial(leds);
   }
 
   EVERY_N_MILLIS(1000) {
@@ -72,6 +81,14 @@ void loop() {
   }
 
   FastLED.show();
+}
+
+void setBrightnessFromPot() {
+  static float potValue = 0;
+  potValue = 0.99 * potValue + 0.01 * analogRead(A8);
+  int brightnessVal = potValue*255/1023;
+//  Serial.println(brightnessVal);
+  FastLED.setBrightness(brightnessVal);
 }
 
 void printLedsToSerial(CRGB leds[]) {

@@ -84,13 +84,12 @@ void processSound(float soundArray[], float deltas[]) {
 
 float processBand(float f[], int startIndex, int numValues);
 
+int bandsGrouping[6][2] = {{0,2}, {3,4}, {8,8}, {17,17}, {35,24}, {60,80}};
+
 void createBands(float f[], float bands[]) {
-  bands[0] = processBand(f, 0, 2);
-  bands[1] = processBand(f, 2, 4);
-  bands[2] = processBand(f, 7, 9);
-  bands[3] = processBand(f, 17, 17);
-  bands[4] = processBand(f, 35, 24);
-  bands[5] = processBand(f, 60, 80);
+  for (int i = 0; i < 6; i++) {
+    bands[i] = processBand(f, bandsGrouping[i][0], bandsGrouping[i][1]);
+  }
 }
 
 float processBand(float f[], int startIndex, int numValues) {
