@@ -1,5 +1,5 @@
 #define NUM_STRIPS 8
-#define NUM_LEDS_PER_STRIP 75
+#define NUM_LEDS_PER_STRIP 210
 #define MOVE_PIXEL_EVERY_X_MS 5
 
 #define USE_OCTOWS2811
