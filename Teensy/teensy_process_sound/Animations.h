@@ -1,7 +1,12 @@
 #ifndef ANIMATIONS_H
 #define ANIMATIONS_H
 
+#define DEFAULT_ANIMATION_SPEED 5000
+#define MIN_SPEED_OFFSET -10
+#define MAX_SPEED_OFFSET 20
+
 uint8_t hueShift = 0;
+static int8_t animationSpeed = 0;
 
 uint8_t getHue(uint8_t hue) {
   EVERY_N_MILLIS(300) {
@@ -17,11 +22,14 @@ void shiftArrayRight(CRGB leds[], int moveBy, int startIndex) {
   }
 }
 
+elapsedMicros elapsed;
+
 void moveStrips(CRGB leds[], int startIndex) {
-  EVERY_N_MILLIS(MOVE_PIXEL_EVERY_X_MS) {
+  if (elapsed >= DEFAULT_ANIMATION_SPEED + animationSpeed * 500) {
     for (int i = 0; i < NUM_STRIPS; i++) {
       shiftArrayRight(&leds[i*NUM_LEDS_PER_STRIP], 1, startIndex);
     }
+    elapsed = 0;
   }
 }
 
