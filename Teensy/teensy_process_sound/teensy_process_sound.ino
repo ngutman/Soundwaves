@@ -70,7 +70,6 @@ void loop() {
     }
     processSound(soundArray, deltas);
     createBands(deltas, bands);
-    bandsAnimation(bands, leds);
 
 //    printArrayToSerial(soundArray, NUM_BINS);
 //    printArrayToSerial(deltas, NUM_BINS);
@@ -83,6 +82,7 @@ void loop() {
 //    Serial.println(FastLED.getFPS());
   }
 
+  bandsAnimation(bands, leds);
   FastLED.show();
 }
 
@@ -116,9 +116,6 @@ void setSpeedFromKY040() {
     } else if (animationSpeed < MIN_SPEED_OFFSET) {
       animationSpeed = MIN_SPEED_OFFSET;
     }
-
-    Serial.println(animationSpeed);
-  
     pinCLKlast = currentVal;
   }
 }
