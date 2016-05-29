@@ -9,6 +9,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#include <Bounce.h>
 #include "Globals.h"
 #include "SoundFilters.h"
 #include "Animations.h"
@@ -27,6 +28,8 @@ float bands[6];
 // OctoWS2811: 2,14,7,8,6,20,21,5
 
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
+
+Bounce controlButton = Bounce(CONTROL_PIN, 10);  // 10 ms debounce
 
 void printArrayToSerial(float soundArray[], int arrayLength);
 void printLedsToSerial(CRGB leds[]);
@@ -89,8 +92,8 @@ void loop() {
 void setupKY040() {
   pinMode(KY040_CLK, INPUT);
   pinMode(KY040_DT, INPUT);
-  pinMode(KY040_SW, INPUT);
-  digitalWrite(KY040_SW, HIGH);
+  
+  pinMode(CONTROL_PIN, INPUT_PULLUP);
 }
 
 void setSpeedFromKY040() {
@@ -107,23 +110,36 @@ void setSpeedFromKY040() {
       }
     }
   
-    if (!digitalRead(KY040_SW)) {
-      animationSpeed = 0;
-    }
-  
     if (animationSpeed > MAX_SPEED_OFFSET) {
       animationSpeed = MAX_SPEED_OFFSET;
     } else if (animationSpeed < MIN_SPEED_OFFSET) {
       animationSpeed = MIN_SPEED_OFFSET;
     }
     pinCLKlast = currentVal;
+    Serial.println(animationSpeed);
   }
 }
 
 void setBrightnessFromPot() {
   static float potValue = 0;
-  potValue = 0.99 * potValue + 0.01 * analogRead(A8);
+  static bool controlConnected = false;
+  
+  potValue = 0.99 * potValue + 0.01 * analogRead(BRIGHTNESS_PIN);
   int brightnessVal = potValue*255/1023;
+  if (brightnessVal <= 5) {
+    brightnessVal = 0;
+  }
+
+  if (controlButton.update()) {
+    if (controlButton.fallingEdge()) {
+      controlConnected = !controlConnected;
+    }
+  }
+
+  if (!controlConnected) {
+    brightnessVal = 255;
+  }
+  
   FastLED.setBrightness(brightnessVal);
 }
 

@@ -2,8 +2,8 @@
 #define ANIMATIONS_H
 
 #define DEFAULT_ANIMATION_SPEED 12000
-#define MIN_SPEED_OFFSET -30
-#define MAX_SPEED_OFFSET 20
+#define MIN_SPEED_OFFSET 0
+#define MAX_SPEED_OFFSET 30
 
 uint8_t hueShift = 0;
 static int8_t animationSpeed = 0;
