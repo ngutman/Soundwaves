@@ -1,6 +1,5 @@
 #define NUM_STRIPS 8
-#define NUM_LEDS_PER_STRIP 75
-#define MOVE_PIXEL_EVERY_X_MS 5
+#define NUM_LEDS_PER_STRIP 210
 
 #define USE_OCTOWS2811
 #include <OctoWS2811.h>
@@ -10,6 +9,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
+#include <Bounce.h>
 #include "Globals.h"
 #include "SoundFilters.h"
 #include "Animations.h"
@@ -29,6 +29,13 @@ float bands[6];
 
 CRGB leds[NUM_STRIPS * NUM_LEDS_PER_STRIP];
 
+Bounce controlButton = Bounce(CONTROL_PIN, 10);  // 10 ms debounce
+
+void printArrayToSerial(float soundArray[], int arrayLength);
+void printLedsToSerial(CRGB leds[]);
+void setBrightnessFromPot();
+void setSpeedFromKY040();
+void setupKY040();
 
 void setup() {
   LEDS.addLeds<OCTOWS2811>(leds, NUM_LEDS_PER_STRIP);
@@ -50,14 +57,13 @@ void setup() {
   memset(deltas, 0, sizeof(deltas));
 
   FastLED.setBrightness(200);
-}
 
-void printArrayToSerial(float soundArray[], int arrayLength);
-void printLedsToSerial(CRGB leds[]);
-void setBrightnessFromPot();
+  setupKY040();
+}
 
 void loop() {
   setBrightnessFromPot();
+  setSpeedFromKY040();
   
   int i;
 
@@ -67,7 +73,6 @@ void loop() {
     }
     processSound(soundArray, deltas);
     createBands(deltas, bands);
-    bandsAnimation(bands, leds);
 
 //    printArrayToSerial(soundArray, NUM_BINS);
 //    printArrayToSerial(deltas, NUM_BINS);
@@ -80,14 +85,61 @@ void loop() {
 //    Serial.println(FastLED.getFPS());
   }
 
+  bandsAnimation(bands, leds);
   FastLED.show();
+}
+
+void setupKY040() {
+  pinMode(KY040_CLK, INPUT);
+  pinMode(KY040_DT, INPUT);
+  
+  pinMode(CONTROL_PIN, INPUT_PULLUP);
+}
+
+void setSpeedFromKY040() {
+  static uint8_t pinCLKlast = digitalRead(KY040_CLK);
+  uint8_t currentVal;
+  EVERY_N_MILLIS(5) {
+    currentVal = digitalRead(KY040_CLK);
+
+    if (currentVal != pinCLKlast) {
+      if (digitalRead(KY040_DT) == currentVal) {
+        animationSpeed += 1;
+      } else {
+        animationSpeed -= 1;
+      }
+    }
+  
+    if (animationSpeed > MAX_SPEED_OFFSET) {
+      animationSpeed = MAX_SPEED_OFFSET;
+    } else if (animationSpeed < MIN_SPEED_OFFSET) {
+      animationSpeed = MIN_SPEED_OFFSET;
+    }
+    pinCLKlast = currentVal;
+    Serial.println(animationSpeed);
+  }
 }
 
 void setBrightnessFromPot() {
   static float potValue = 0;
-  potValue = 0.99 * potValue + 0.01 * analogRead(A8);
+  static bool controlConnected = false;
+  
+  potValue = 0.99 * potValue + 0.01 * analogRead(BRIGHTNESS_PIN);
   int brightnessVal = potValue*255/1023;
-//  Serial.println(brightnessVal);
+  if (brightnessVal <= 5) {
+    brightnessVal = 0;
+  }
+
+  if (controlButton.update()) {
+    if (controlButton.fallingEdge()) {
+      controlConnected = !controlConnected;
+    }
+  }
+
+  if (!controlConnected) {
+    brightnessVal = 255;
+  }
+  
   FastLED.setBrightness(brightnessVal);
 }
 
